@@ -150,10 +150,10 @@ public:
         return added;
 
     }
-    T delete(int k){
+    T deletee(int k){
         assert(len() > 0);
         int h = hash(k,len());
-        T deleted = A[h].delete(k);
+        T deleted = A[h].deletee(k);
         size--;
         this->resize(A.size());
         return deleted;
@@ -167,10 +167,43 @@ public:
             }
         }
     };
-    T find_max(){};
-    T find_next(){};
-    T find_prev(){};
-    T iter_oder(){};
+    T find_max(){
+        T out;
+        out = nullptr;
+        for(int i=0; i < A.size();i++){
+            if(out = NULL || A[i].find_max() >out){
+                out = A[i].find_max();
+                break;
+            }
+        }return out;
+    };
+    T find_next(){
+        T out;
+        out = NULL;
+        for(int i=0; i < A.size(); i++){
+            if(out = NULL || A[i].find_next() > out){
+                out = A[i].find_next();
+                break;
+            }
+        }
+        return out;
+    };
+    T find_prev(int k){
+        T out = None;
+        for(int x=0; x < A.size(); x++){
+            if(A[x].find_prev() > k){
+                if(out == None || find_prev(A[x]) >out)
+                    out = x;
+            }
+        }return out;
+    };
+    T iter_oder(){
+        int x = A.find_min();
+        while(x != NULL){
+            
+        }
+
+    };
 };
 int main(){
 
