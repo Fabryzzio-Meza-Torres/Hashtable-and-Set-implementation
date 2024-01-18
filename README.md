@@ -5,5 +5,5 @@
 - Yoselyn Victoria Miranda Chirinos
 ## Hash Table
 ![](hash.png)
-## Set(using Hashing)
+## Set (using Hashing)
 ![](set.png)
