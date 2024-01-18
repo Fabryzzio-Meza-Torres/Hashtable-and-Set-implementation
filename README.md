@@ -4,6 +4,6 @@
 - Fernando Alonso Usurin Arias
 - Yoselyn Victoria Miranda Chirinos
 ## Hash Table
-![](hash.png)
+![](hash .png)
 ## Set(using Hashing)
 ![](set.png)
