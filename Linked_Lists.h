@@ -84,6 +84,16 @@ public:
         }
     };
 
+    iter begin()
+    {
+        return iter(head);
+    }
+
+    iter end()
+    {
+        return iter(nullptr);
+    }
+
     void build(Container % container)
     {
         for (auto &x : container)
@@ -94,7 +104,7 @@ public:
 
     int get_at(int i)
     {
-        Linked_List_Node<T> *temp = later_node(i);
+        Linked_List_Node<T> *node = later_node(i);
         return node->data;
     }
 
@@ -167,5 +177,68 @@ public:
     {
         delete_at(size - 1);
         return;
+    }
+};
+
+template <typename T, class Container>
+class Set_from_Seq
+{
+private:
+    Linked_List_Seq<T> Seq;
+    Set_from_Seq<T>()
+    {
+        Seq = Linked_List_Seq<T>();
+    }
+    int size()
+    {
+        return Seq.len();
+    }
+    void build(Container % container)
+    {
+        Seq.build(container);
+    }
+
+    class Iterator
+    {
+        typename Linked_List_Seq<T>::iter it;
+        Iterator(typename Linked_List_Seq<T>::iter iter) : it(iter) {}
+
+        T operator*() const
+        {
+            return *it;
+        }
+        Iterator &operator++()
+        {
+            ++it;
+            return *this;
+        }
+
+        bool operator!=(Iterator &other) const
+        {
+            return it != other.it;
+        }
+    };
+
+    Iterator begin()
+    {
+        return Iterator(Seq.begin());
+    }
+
+    Iterator end()
+    {
+        return Iterator(Seq.end());
+    }
+
+    void insert(const &T x)
+    {
+        for (int i = 0; i < Seq.len(); i++)
+        {
+            if (Seq.get_at(i) == x)
+            {
+                Seq.set_at(i, x);
+                return;
+            }
+        }
+        Seq.insert_first(x);
     }
 };
