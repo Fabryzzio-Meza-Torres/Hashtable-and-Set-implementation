@@ -49,7 +49,7 @@ protected:
     int size = 0;
 
 public:
-    Linked_List_Seq() : head(nullptr), size(0);
+    Linked_List_Seq() : head(nullptr), size(0){};
     ~Linked_List_Seq()
     {
         Linked_List_Node<T> *newNode = head;
@@ -76,7 +76,7 @@ public:
         iter &operator++()
         {
             node = node->next;
-            return *this:
+            return *this;
         }
         bool operator!=(const iter &other) const
         {
@@ -94,7 +94,7 @@ public:
         return iter(nullptr);
     }
 
-    void build(Container % container)
+    void build(Container& container)
     {
         for (auto &x : container)
         {
@@ -104,19 +104,19 @@ public:
 
     int get_at(int i)
     {
-        Linked_List_Node<T> *node = later_node(i);
+        Linked_List_Node<T> *node = later_node<T>(i);
         return node->data;
     }
 
     void set_at(int i, int x)
     {
-        Linked_List_Node<T> *temp = later_node(i);
+        Linked_List_Node<T> *temp = later_node<T>(i);
         temp->data = x;
     }
 
     void insert_first(int x)
     {
-        Linked_List_Node *newNode = Linked_List_Node(x);
+        Linked_List_Node<T> *newNode = Linked_List_Node(x);
         newNode->next = head;
         head = newNode;
         size++;
@@ -142,7 +142,7 @@ public:
         else
         {
             Linked_List_Node<T> *newNode = new Linked_List_Node(x);
-            Linked_List_Node<T> *temp = later_node(i - 1);
+            Linked_List_Node<T> *temp = later_node<T>(i - 1);
             newNode->next = temp->next;
             temp->next = newNode;
             size++;
@@ -153,11 +153,11 @@ public:
         if (i == 0)
         {
             delete_first();
-            return;
+            return 0;
         }
         else
         {
-            Linked_List_Node<T> *temp = later_node(i - 1);
+            Linked_List_Node<T> *temp = later_node<T>(i - 1);
             int x = temp->next->data;
             Linked_List_Node<T> *temp2 = temp->next;
             temp->next = temp->next->next;
@@ -176,7 +176,7 @@ public:
     int delete_last()
     {
         delete_at(size - 1);
-        return;
+        return 0;
     }
 };
 
@@ -184,24 +184,24 @@ template <typename T, class Container>
 class Set_from_Seq
 {
 private:
-    Linked_List_Seq<T> Seq;
+    Linked_List_Seq<T,Container> Seq;
     Set_from_Seq<T>()
     {
-        Seq = Linked_List_Seq<T>();
+        Seq = Linked_List_Seq<T,Container>();
     }
     int size()
     {
         return Seq.len();
     }
-    void build(Container % container)
+    void build(Container& container)
     {
         Seq.build(container);
     }
 
     class Iterator
     {
-        typename Linked_List_Seq<T>::iter it;
-        Iterator(typename Linked_List_Seq<T>::iter iter) : it(iter) {}
+        typename Linked_List_Seq<T,Container>::iter it;
+        Iterator(typename Linked_List_Seq<T,Container>::iter iter) : it(iter) {}
 
         T operator*() const
         {
@@ -229,7 +229,7 @@ private:
         return Iterator(Seq.end());
     }
 
-    void insert(const &T x)
+    void insert(const T& x)
     {
         for (int i = 0; i < Seq.len(); i++)
         {
