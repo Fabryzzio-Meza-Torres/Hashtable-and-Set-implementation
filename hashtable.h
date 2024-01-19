@@ -1,11 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 #include "Linked_Lists.h"
 using namespace std;
 
 template <class T>
-
 class Hash_Table_Set
 {
 private:
@@ -18,16 +18,17 @@ private:
 
     void _compute_bounds()
     {
-        upper = A.size();
-        lower = A.size() * 100 * 100 / (r * r);
+
+        this->upper = A.size();
+        this->lower = A.size() * 100 * 100 / (r * r);
     }
 
     void _resize(int n)
     {
-        if (lower >= n || n >= upper)
+        if (this->lower >= n || n >= this->upper)
         {
-            int f = r / 100;
-            if (r % 100)
+            int f = this->r / 100;
+            if (this->r % 100)
             {
                 f += 1;
             }
@@ -35,33 +36,33 @@ private:
             int m = std::max(n, 1) * f;
             std::vector<Set_from_Seq<T>> new_A(m);
 
-            for (const T &x : *this)
+            for (const T &x : this->chain_set)
             {
-                int h = _hash(x.key, m);
+                int h = this->_hash(x.key, m);
                 new_A[h].insert(x);
             }
 
-            A = new_A;
-            _compute_bounds();
+            this->A = new_A;
+            this->_compute_bounds();
         }
     }
 
     int _hash(int k, int m)
     {
-        return ((a * k) % p) % m;
+        return ((this->a * k) % this->p) % m;
     }
 
 public:
     Hash_Table_Set(int r = 200) : r(r), size(0), p(2147483647)
     {
-        a = rand() % (p - 1) + 1;
-        _compute_bounds();
-        _resize(0);
+        this->a = rand() % (this->p - 1) + 1;
+        this->_compute_bounds();
+        this->_resize(0);
     }
 
     int len() const
     {
-        return size;
+        return this->size;
     }
 
     class Iterator
@@ -76,18 +77,18 @@ public:
 
         T operator*() const
         {
-            return *it;
+            return *this->it;
         }
 
         Iterator &operator++()
         {
-            ++it;
-            while (it == set_it->end())
+            ++this->it;
+            while (this->it == this->set_it->end())
             {
-                ++set_it;
-                if (set_it != set_it->end())
+                ++this->set_it;
+                if (this->set_it != this->set_it->end())
                 {
-                    it = set_it->begin();
+                    this->it = this->set_it->begin();
                 }
             }
             return *this;
@@ -95,64 +96,66 @@ public:
 
         bool operator!=(const Iterator &other) const
         {
-            return it != other.it || set_it != other.set_it;
+            return this->it != other.it || this->set_it != other.set_it;
         }
     };
 
     Iterator begin() const
     {
-        if (!A.empty())
+        if (!this->A.empty())
         {
-            return Iterator(A[0].begin(), A.begin());
+            return Iterator(this->chain_set.begin(), this->A.begin());
         }
         return end();
     }
 
     Iterator end() const
     {
-        return Iterator(Set_from_Seq<T>::Iterator(nullptr), A.end());
+
+        return Iterator(this->chain_set.end(), this->A.end());
     }
 
     void build(const std::vector<T> &X)
     {
         for (const T &x : X)
         {
-            insert(x);
+            this->insert(x);
         }
     }
 
     bool find(int k) const
     {
-        int h = _hash(k, A.size());
-        return A[h].find(k);
+        int h = this->_hash(k, this->A.size());
+        return this->A[h].find(k);
     }
 
     bool insert(const T &x)
     {
-        _resize(size + 1);
-        int h = _hash(x.key, A.size());
-        bool added = A[h].insert(x);
+        this->_resize(this->size + 1);
+        int h = this->_hash(x, this->A.size());
+        bool added = this->A[h].insert(x);
         if (added)
         {
-            size++;
+            this->size++;
         }
         return added;
     }
 
     T remove(int k)
     {
-        assert(size > 0);
-        int h = _hash(k, A.size());
-        T x = A[h].remove(k);
-        size--;
-        _resize(size);
+        assert(this->size > 0);
+        int h = this->_hash(k, this->A.size());
+        T x = this->A[h].remove(k);
+        this->size--;
+        this->_resize(this->size);
         return x;
     }
 
     T find_min() const
     {
         T out;
-        for (const T &x : *this)
+
+        for (const T &x : this->chain_set)
         {
             if (out.isNull() || (x.key < out.key))
             {
@@ -165,7 +168,8 @@ public:
     T find_max() const
     {
         T out;
-        for (const T &x : *this)
+
+        for (const T &x : this->chain_set)
         {
             if (out.isNull() || (x.key > out.key))
             {
@@ -178,7 +182,8 @@ public:
     T find_next(int k) const
     {
         T out;
-        for (const T &x : *this)
+
+        for (const T &x : this->chain_set)
         {
             if (x.key > k)
             {
@@ -194,7 +199,8 @@ public:
     T find_prev(int k) const
     {
         T out;
-        for (const T &x : *this)
+
+        for (const T &x : this->chain_set)
         {
             if (x.key < k)
             {
@@ -218,23 +224,23 @@ public:
 
         T operator*() const
         {
-            return current;
+            return this->current;
         }
 
         IteratorOrder &operator++()
         {
-            current = hash_table->find_next(current.key);
+            this->current = this->hash_table->find_next(this->current.key);
             return *this;
         }
 
         bool operator!=(const IteratorOrder &other) const
         {
-            return current != other.current;
+            return this->current != other.current;
         }
 
         bool isEnd() const
         {
-            return current.isNull();
+            return this->current.isNull();
         }
     };
 

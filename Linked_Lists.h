@@ -44,7 +44,7 @@ public:
     }
 };
 
-template <typename T, typename Container>
+template <typename T>
 class Linked_List_Seq
 {
 protected:
@@ -97,6 +97,7 @@ public:
         return iter(nullptr);
     }
 
+    template <typename Container>
     void build(Container &container)
     {
         for (auto &x : container)
@@ -119,7 +120,7 @@ public:
 
     void insert_first(int x)
     {
-        Linked_List_Node<T> *newNode = Linked_List_Node(x);
+        Linked_List_Node<T> *newNode = Linked_List_Node<T>(x);
         newNode->next = head;
         head = newNode;
         size++;
@@ -144,7 +145,7 @@ public:
         }
         else
         {
-            Linked_List_Node<T> *newNode = new Linked_List_Node(x);
+            Linked_List_Node<T> *newNode = new Linked_List_Node<T>(x);
             Linked_List_Node<T> *temp = this->later_node(i - 1);
             newNode->next = temp->next;
             temp->next = newNode;
@@ -183,19 +184,24 @@ public:
     }
 };
 
-template <typename T, class Container>
+template <typename T>
 class Set_from_Seq
 {
 private:
-    Linked_List_Seq<T, Container> Seq;
+    Linked_List_Seq<T> Seq;
     Set_from_Seq<T>()
     {
-        Seq = Linked_List_Seq<T, Container>();
+        Seq = Linked_List_Seq<T>();
     }
     int size()
     {
         return Seq.len();
     }
+
+    friend class Iterator;
+
+    template <typename Container>
+
     void build(Container &container)
     {
         Seq.build(container);
@@ -203,8 +209,8 @@ private:
 
     class Iterator
     {
-        typename Linked_List_Seq<T, Container>::iter it;
-        Iterator(typename Linked_List_Seq<T, Container>::iter iter) : it(iter) {}
+        typename Linked_List_Seq<T>::iter it;
+        Iterator(typename Linked_List_Seq<T>::iter iter) : it(iter) {}
 
         T operator*() const
         {
@@ -246,4 +252,4 @@ private:
     }
 };
 
-#endif LINKED_LISTS_H
+#endif // LINKED_LISTS_H
