@@ -1,3 +1,6 @@
+#ifndef LINKED_LISTS_H
+#define LINKED_LISTS_H
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -49,7 +52,7 @@ protected:
     int size = 0;
 
 public:
-    Linked_List_Seq() : head(nullptr), size(0);
+    Linked_List_Seq() : head(nullptr), size(0){};
     ~Linked_List_Seq()
     {
         Linked_List_Node<T> *newNode = head;
@@ -76,7 +79,7 @@ public:
         iter &operator++()
         {
             node = node->next;
-            return *this:
+            return *this;
         }
         bool operator!=(const iter &other) const
         {
@@ -94,7 +97,7 @@ public:
         return iter(nullptr);
     }
 
-    void build(Container % container)
+    void build(Container &container)
     {
         for (auto &x : container)
         {
@@ -116,7 +119,7 @@ public:
 
     void insert_first(int x)
     {
-        Linked_List_Node *newNode = Linked_List_Node(x);
+        Linked_List_Node<T> *newNode = Linked_List_Node(x);
         newNode->next = head;
         head = newNode;
         size++;
@@ -242,3 +245,5 @@ private:
         Seq.insert_first(x);
     }
 };
+
+#endif LINKED_LISTS_H
