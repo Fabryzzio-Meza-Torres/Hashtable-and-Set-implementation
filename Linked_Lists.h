@@ -104,13 +104,13 @@ public:
 
     int get_at(int i)
     {
-        Linked_List_Node<T> *node = later_node<T>(i);
+        Linked_List_Node<T> *node = this->later_node(i);
         return node->data;
     }
 
     void set_at(int i, int x)
     {
-        Linked_List_Node<T> *temp = later_node<T>(i);
+        Linked_List_Node<T> *temp = this->later_node(i);
         temp->data = x;
     }
 
@@ -142,7 +142,7 @@ public:
         else
         {
             Linked_List_Node<T> *newNode = new Linked_List_Node(x);
-            Linked_List_Node<T> *temp = later_node<T>(i - 1);
+            Linked_List_Node<T> *temp = this->later_node(i - 1);
             newNode->next = temp->next;
             temp->next = newNode;
             size++;
@@ -157,7 +157,7 @@ public:
         }
         else
         {
-            Linked_List_Node<T> *temp = later_node<T>(i - 1);
+            Linked_List_Node<T> *temp = this->later_node(i - 1);
             int x = temp->next->data;
             Linked_List_Node<T> *temp2 = temp->next;
             temp->next = temp->next->next;
