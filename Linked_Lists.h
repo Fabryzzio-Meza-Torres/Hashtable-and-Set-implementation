@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 using namespace std;
 
 template <class T>
@@ -15,86 +16,83 @@ struct Linked_List_Node
 
 public:
     Linked_List_Node() : next(nullptr), prev(nullptr) {}
-    Linked_List_Node(T data)
+    Linked_List_Node(T data) : data(data), next(nullptr), prev(nullptr) {}
+    Linked_List_Node(T data, Linked_List_Node<T> *next) : data(data), next(next), prev(nullptr) {}
+    Linked_List_Node(T data, Linked_List_Node<T> *next, Linked_List_Node<T> *prev) : data(data), next(next), prev(prev) {}
+
+    Linked_List_Node<T> *later_node(int i)
     {
-        this->data = data;
-        this->next = nullptr;
-        this->prev = nullptr;
-    }
-    Linked_List_Node(T data, Linked_List_Node<T> *next)
-    {
-        this->data = data;
-        this->next = next;
-        this->prev = nullptr;
-    }
-    Linked_List_Node(T data, Linked_List_Node<T> *next, Linked_List_Node<T> *prev)
-    {
-        this->data = data;
-        this->next = next;
-        this->prev = prev;
-    }
-    Linked_List_Node *later_node(int i)
-    {
-        if (i == 0)
+        if (i == 0 || this == nullptr)
         {
             return this;
         }
         assert(this->next != nullptr);
         return this->next->later_node(i - 1);
     }
+
+    class iter
+    {
+        Linked_List_Node<T> *node;
+
+    public:
+        iter(Linked_List_Node<T> *ptr) : node(ptr) {}
+
+        T operator*() const
+        {
+            return node->data;
+        }
+
+        iter &operator++()
+        {
+            node = node->next;
+            return *this;
+        }
+
+        bool operator!=(const iter &other) const
+        {
+            return node != other.node;
+        }
+
+        bool operator==(const iter &other) const
+        {
+            return node == other.node;
+        }
+    };
 };
 
 template <typename T>
 class Linked_List_Seq
 {
 protected:
-    Linked_List_Node<T> *head = nullptr;
+    Linked_List_Node<T> *head;
     int size = 0;
 
 public:
-    Linked_List_Seq() : head(nullptr), size(0){};
+    Linked_List_Seq() : head(nullptr), size(0) {}
     ~Linked_List_Seq()
     {
         Linked_List_Node<T> *newNode = head;
-        while (head != nullptr)
+        while (newNode != nullptr)
         {
             Linked_List_Node<T> *temp = newNode;
             newNode = newNode->next;
             delete temp;
         }
     }
-    int len()
+
+    int len() const
     {
         return size;
     }
 
-    class iter
+    typename Linked_List_Node<T>::iter begin() const
     {
-        Linked_List_Node<T> *node;
-        iter(Linked_List_Node<T> *ptr) : node(ptr) {}
-        int operator*() const
-        {
-            return node->data;
-        }
-        iter &operator++()
-        {
-            node = node->next;
-            return *this;
-        }
-        bool operator!=(const iter &other) const
-        {
-            return node != other.node;
-        }
-    };
-
-    iter begin()
-    {
-        return iter(head);
+        return typename Linked_List_Node<T>::iter(head);
     }
 
-    iter end()
+    typename Linked_List_Node<T>::iter end() const
     {
-        return iter(nullptr);
+        return typename Linked_List_Node<T>::iter(nullptr);
     }
 
     template <typename Container>
@@ -106,21 +104,21 @@ public:
         }
     }
 
-    int get_at(int i)
+    int get_at(int i) const
     {
-        Linked_List_Node<T> *node = this->later_node(i);
+        Linked_List_Node<T> *node = later_node(i);
         return node->data;
     }
 
     void set_at(int i, int x)
     {
-        Linked_List_Node<T> *temp = this->later_node(i);
+        Linked_List_Node<T> *temp = later_node(i);
         temp->data = x;
     }
 
     void insert_first(int x)
     {
-        Linked_List_Node<T> *newNode = Linked_List_Node<T>(x);
+        Linked_List_Node<T> *newNode = new Linked_List_Node<T>(x);
         newNode->next = head;
         head = newNode;
         size++;
@@ -152,12 +150,12 @@ public:
             size++;
         }
     }
+
     int delete_at(int i)
     {
         if (i == 0)
         {
-            delete_first();
-            return 0;
+            return delete_first();
         }
         else
         {
@@ -174,66 +172,79 @@ public:
     void insert_last(int x)
     {
         insert_at(size, x);
-        return;
     }
 
     int delete_last()
     {
-        delete_at(size - 1);
-        return 0;
+        return delete_at(size - 1);
+    }
+
+    Linked_List_Node<T> *later_node(int i) const
+    {
+        if (head == nullptr)
+        {
+            return nullptr;
+        }
+        return head->later_node(i);
     }
 };
 
 template <typename T>
 class Set_from_Seq
 {
-private:
+public:
     Linked_List_Seq<T> Seq;
-    Set_from_Seq<T>()
-    {
-        Seq = Linked_List_Seq<T>();
-    }
-    int size()
+
+    Set_from_Seq<T>() : Seq() {}
+
+    int size() const
     {
         return Seq.len();
     }
 
-    friend class Iterator;
-
-    template <typename Container>
-
-    void build(Container &container)
-    {
-        Seq.build(container);
-    }
-
     class Iterator
     {
-        typename Linked_List_Seq<T>::iter it;
-        Iterator(typename Linked_List_Seq<T>::iter iter) : it(iter) {}
+    public:
+        typename Linked_List_Node<T>::iter it;
+
+        Iterator(typename Linked_List_Node<T>::iter iter) : it(iter) {}
 
         T operator*() const
         {
             return *it;
         }
+
         Iterator &operator++()
         {
             ++it;
             return *this;
         }
 
-        bool operator!=(Iterator &other) const
+        bool operator!=(const Iterator &other) const
         {
             return it != other.it;
         }
+
+        bool operator==(const Iterator &other) const
+        {
+            return it == other.it;
+        }
     };
 
-    Iterator begin()
+    friend class Iterator;
+
+    template <typename Container>
+    void build(Container &container)
+    {
+        Seq.build(container);
+    }
+
+    Iterator begin() const
     {
         return Iterator(Seq.begin());
     }
 
-    Iterator end()
+    Iterator end() const
     {
         return Iterator(Seq.end());
     }
