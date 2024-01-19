@@ -8,4 +8,4 @@
 ## Set (using Hashing)
 ![](set.png)
 ## Referencias APA
-Massachusetts Institute of Technology. (2020). Introduction to Algorithms: 6.006, Recitation 2. Instructors: Erik Demaine, Jason Ku, and Justin Solomon.
+- Massachusetts Institute of Technology. (2020). *Introduction to Algorithms: 6.006*, Recitation 2. Instructors: Erik Demaine, Jason Ku, and Justin Solomon.
