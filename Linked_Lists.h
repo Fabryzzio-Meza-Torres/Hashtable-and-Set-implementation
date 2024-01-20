@@ -39,6 +39,7 @@ public:
 
         T operator*() const
         {
+
             return node->data;
         }
 
@@ -64,21 +65,11 @@ template <typename T>
 class Linked_List_Seq
 {
 protected:
-    Linked_List_Node<T> *head;
+    Linked_List_Node<T> *head = nullptr;
     int size = 0;
 
 public:
     Linked_List_Seq() : head(nullptr), size(0) {}
-    ~Linked_List_Seq()
-    {
-        Linked_List_Node<T> *newNode = head;
-        while (newNode != nullptr)
-        {
-            Linked_List_Node<T> *temp = newNode;
-            newNode = newNode->next;
-            delete temp;
-        }
-    }
 
     int len() const
     {

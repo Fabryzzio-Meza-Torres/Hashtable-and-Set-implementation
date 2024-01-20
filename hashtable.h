@@ -113,7 +113,7 @@ public:
 
     Iterator end() const
     {
-        return Iterator(Set_from_Seq<T>::Iterator(), A.end(), this);
+        return Iterator(Set_from_Seq<T>().end(), A.end(), this);
     }
 
     void build(const std::vector<T> &X)
