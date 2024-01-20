@@ -74,6 +74,8 @@ public:
         const Hash_Table_Set<T> *hash_table;
 
     public:
+        Iterator() : it(), set_it(), hash_table(nullptr) {}
+
         Iterator(typename Set_from_Seq<T>::Iterator iter, typename std::vector<Set_from_Seq<T>>::const_iterator set_iter, const Hash_Table_Set<T> *ht)
             : it(iter), set_it(set_iter), hash_table(ht) {}
 
@@ -84,6 +86,11 @@ public:
 
         Iterator &operator++()
         {
+            if (set_it == hash_table->A.end())
+            {
+                throw std::out_of_range("Iterator reached the end");
+            }
+
             ++it;
             while (it == set_it->end())
             {
@@ -104,10 +111,15 @@ public:
 
     Iterator begin() const
     {
-        if (!A.empty())
+        auto set_it = find_if(A.begin(), A.end(),
+                              [](const Set_from_Seq<T> &subset)
+                              { return !subset.empty(); });
+
+        if (set_it != A.end())
         {
-            return Iterator(A[0].begin(), A.begin(), this);
+            return Iterator(set_it->begin(), set_it, this);
         }
+
         return end();
     }
 
@@ -147,7 +159,12 @@ public:
         T x = A[h].remove(k);
         size--;
         _resize(size);
-        chain_set.build(A);
+        chain_set = Set_from_Seq<T>();
+        for (const auto &subset : A)
+        {
+            chain_set.build(subset);
+        }
+
         return x;
     }
 

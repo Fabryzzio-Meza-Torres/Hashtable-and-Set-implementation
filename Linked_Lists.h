@@ -39,8 +39,14 @@ public:
 
         T operator*() const
         {
-
-            return node->data;
+            if (node != nullptr)
+            {
+                return node->data;
+            }
+            else
+            {
+                return T();
+            }
         }
 
         iter &operator++()
@@ -202,7 +208,15 @@ public:
 
         T operator*() const
         {
-            return *it;
+            if (it != typename Linked_List_Node<T>::iter(nullptr))
+            {
+                return *it;
+            }
+            else
+            {
+
+                return T();
+            }
         }
 
         Iterator &operator++()
@@ -251,6 +265,11 @@ public:
             }
         }
         Seq.insert_first(x);
+    }
+
+    bool empty() const
+    {
+        return Seq.len() == 0;
     }
 };
 

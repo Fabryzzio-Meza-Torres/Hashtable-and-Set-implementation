@@ -12,6 +12,7 @@
         "initializer_list": "cpp",
         "ranges": "cpp",
         "*.tcc": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "stdexcept": "cpp"
     }
 }
