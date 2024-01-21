@@ -44,11 +44,11 @@ int main()
     hashTable.build(data);
 
     cout << "Hash Table Set: ";
-    for (const auto &element : hashTable)
+    auto hashTableIter = hashTable.begin();
+    while (hashTableIter != hashTable.end())
     {
-        cout << element << " ";
+        cout << *hashTableIter << " ";
+        ++hashTableIter;
     }
-    cout << "\n\n";
-
-    return 0;
+    cout << endl;
 }

@@ -81,23 +81,29 @@ public:
 
         T operator*() const
         {
+            if (set_it == hash_table->A.end() || it == set_it->end())
+            {
+                return T();
+            }
+            if (it == set_it->end())
+            {
+                return T();
+            }
             return *it;
         }
 
         Iterator &operator++()
         {
-            if (set_it == hash_table->A.end())
+            if (set_it != hash_table->A.end())
             {
-                throw std::out_of_range("Iterator reached the end");
-            }
-
-            ++it;
-            while (it == set_it->end())
-            {
-                ++set_it;
-                if (set_it != hash_table->A.end())
+                ++it;
+                while (it == set_it->end())
                 {
-                    it = set_it->begin();
+                    ++set_it;
+                    if (set_it != hash_table->A.end())
+                    {
+                        it = set_it->begin();
+                    }
                 }
             }
             return *this;
@@ -105,7 +111,7 @@ public:
 
         bool operator!=(const Iterator &other) const
         {
-            return it != other.it || set_it != other.set_it;
+            return it != other.it || set_it != other.set_it || hash_table != other.hash_table;
         }
     };
 
@@ -117,7 +123,15 @@ public:
 
         if (set_it != A.end())
         {
-            return Iterator(set_it->begin(), set_it, this);
+            while (set_it != A.end() && set_it->empty())
+            {
+                ++set_it;
+            }
+
+            if (set_it != A.end())
+            {
+                return Iterator(set_it->begin(), set_it, this);
+            }
         }
 
         return end();
@@ -241,6 +255,11 @@ public:
 
         T operator*() const
         {
+            if (current.isNull())
+            {
+                return T();
+            }
+
             return current;
         }
 

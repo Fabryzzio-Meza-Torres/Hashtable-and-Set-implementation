@@ -13,6 +13,17 @@
         "ranges": "cpp",
         "*.tcc": "cpp",
         "ostream": "cpp",
-        "stdexcept": "cpp"
+        "stdexcept": "cpp",
+        "cmath": "cpp",
+        "exception": "cpp",
+        "functional": "cpp",
+        "memory": "cpp",
+        "random": "cpp",
+        "istream": "cpp",
+        "numeric": "cpp",
+        "streambuf": "cpp",
+        "system_error": "cpp",
+        "atomic": "cpp",
+        "limits": "cpp"
     }
 }

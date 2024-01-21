@@ -39,7 +39,7 @@ public:
 
         T operator*() const
         {
-            if (node != nullptr)
+            if (node->data != T())
             {
                 return node->data;
             }
@@ -214,7 +214,6 @@ public:
             }
             else
             {
-
                 return T();
             }
         }
